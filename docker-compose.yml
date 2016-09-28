@@ -1,0 +1,40 @@
+version: '2'
+
+services:
+  shard0:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --shardsvr
+      - --replSet
+      - shard0
+    expose:
+      - "27018"
+  shard1:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --shardsvr
+      - --replSet
+      - shard1
+    expose:
+      - "27018"
+  configsvr:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --configsvr
+      - --replSet
+      - configsvr
+      - --dbpath
+      - /data/db
+    expose:
+      - "27019"
+  mongos:
+    build: .
+    entrypoint:
+      - /usr/bin/mongos
+      - --configdb
+      - configsvr/mongocluster_configsvr_1:27019,mongocluster_configsvr_2:27019
+    expose:
+      - "27017"
