@@ -1,7 +1,7 @@
 version: '2'
 
 services:
-  shard0:
+  shard01:
     build: .
     entrypoint:
       - /usr/bin/mongod
@@ -10,7 +10,31 @@ services:
       - shard0
     expose:
       - "27018"
-  shard1:
+    volumes:
+      - vol01:/data/db
+  shard02:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --shardsvr
+      - --replSet
+      - shard0
+    expose:
+      - "27018"
+    volumes:
+      - vol02:/data/db
+  shard03:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --shardsvr
+      - --replSet
+      - shard0
+    expose:
+      - "27018"
+    volumes:
+      - vol03:/data/db
+  shard11:
     build: .
     entrypoint:
       - /usr/bin/mongod
@@ -19,7 +43,31 @@ services:
       - shard1
     expose:
       - "27018"
-  configsvr:
+    volumes:
+      - vol11:/data/db
+  shard12:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --shardsvr
+      - --replSet
+      - shard1
+    expose:
+      - "27018"
+    volumes:
+      - vol12:/data/db
+  shard13:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --shardsvr
+      - --replSet
+      - shard1
+    expose:
+      - "27018"
+    volumes:
+      - vol13:/data/db
+  configsvr1:
     build: .
     entrypoint:
       - /usr/bin/mongod
@@ -30,11 +78,35 @@ services:
       - /data/db
     expose:
       - "27019"
+    volumes:
+      - vol_conf1:/data/db
+  configsvr2:
+    build: .
+    entrypoint:
+      - /usr/bin/mongod
+      - --configsvr
+      - --replSet
+      - configsvr
+      - --dbpath
+      - /data/db
+    expose:
+      - "27019"
+    volumes:
+      - vol_conf2:/data/db
   mongos:
     build: .
     entrypoint:
       - /usr/bin/mongos
       - --configdb
-      - configsvr/mongocluster_configsvr_1:27019,mongocluster_configsvr_2:27019
+      - configsvr/mongocluster_configsvr1_1:27019,mongocluster_configsvr2_1:27019
     expose:
       - "27017"
+volumes:
+  vol01:
+  vol02:
+  vol03:
+  vol11:
+  vol12:
+  vol13:
+  vol_conf1:
+  vol_conf2:

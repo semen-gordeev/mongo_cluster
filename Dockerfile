@@ -5,4 +5,3 @@ RUN echo "deb http://repo.mongodb.org/apt/ubuntu $(cat /etc/lsb-release | grep D
 
 RUN apt-get update && apt-get install -y mongodb-org
 
-RUN mkdir -p /data/db
