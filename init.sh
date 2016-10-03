@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker network create mongocluster_default
+
 docker-compose scale shard01=1 shard02=1 shard03=1 shard11=1 shard12=1 shard13=1 configsvr1=1 configsvr2=1
 
 sleep 3
